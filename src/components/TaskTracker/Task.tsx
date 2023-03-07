@@ -38,7 +38,7 @@ export const Task = ({ task }) => {
     <>
       {!openSettings ? (
         <div
-          className={`w-full cursor-pointer border-l-4 bg-stone-300 py-2 px-2 dark:bg-gray-700 ${
+          className={`my-2 w-full cursor-pointer border-l-4 bg-stone-300 py-2 px-2 dark:bg-gray-700 ${
             task.inProgress &&
             !task.completed &&
             "joyRideInProgressTask border-cyan-700 bg-cyan-500 dark:bg-cyan-500 dark:text-stone-600"

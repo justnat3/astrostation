@@ -4,6 +4,7 @@ import { RiArrowGoBackFill } from "react-icons/ri";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Settings } from "./Settings";
 import { useTask, useTimer, useBreakStarted } from "@Store";
+import clsx from 'clsx'
 
 // TODO: Remove alerted
 // TODO: Add a blurb/instructions to let users know how to toggle
@@ -81,14 +82,18 @@ export const Task = ({ task }) => {
               <div>
                 {!task.completed ? (
                   <FaCheck
-                    className={`ml-2 cursor-pointer dark:text-stone-600 ${task.completed ? "text-green-500" : "text-slate-500"
-                      }`}
+                    className={clsx(
+                      "ml-2 cursor-pointer dark:text-stone-600",
+                      task.completed ? "text-green-500" : "text-slate-500"
+                    )}
                     onClick={() => completeTask(task.id)}
                   />
                 ) : (
                   <RiArrowGoBackFill
-                    className={`ml-2 cursor-pointer ${task.completed ? "text-green-500" : "text-slate-500"
-                      }`}
+                    className={clsx(
+                       "ml-2 cursor-pointer",
+                      task.completed ? "text-green-500" : "text-slate-500"
+                      )}
                     onClick={() => completeTask(task.id)}
                   />
                 )}

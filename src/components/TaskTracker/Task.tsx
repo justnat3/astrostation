@@ -1,3 +1,4 @@
+import { ITask } from "../../interfaces";
 import { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { RiArrowGoBackFill } from "react-icons/ri";
@@ -65,16 +66,13 @@ export const Task = ({ task }) => {
             "my-2 w-full cursor-pointer border-l-4 bg-stone-300 py-2 px-2 dark:bg-gray-700",
             task.inProgress &&
               !task.completed &&
-              "joyRideInProgressTask border-cyan-700 bg-cyan-500 dark:bg-cyan-500 dark:text-stone-600",
-
-            task.completed &&
-              "border-green-500 bg-green-300 line-through dark:bg-green-300 dark:text-stone-600",
-
-            !task.completed &&
+              "joyRideInProgressTask border-cyan-700 bg-cyan-500 dark:bg-cyan-500 dark:text-stone-600"
+              } ${task.completed &&
+              "border-green-500 bg-green-300 line-through dark:bg-green-300 dark:text-stone-600"
+              } ${!task.completed &&
               task.alerted &&
-              "border-red-500 bg-red-300 dark:bg-red-300 dark:text-stone-600",
-
-            !task.completed &&
+              "border-red-500 bg-red-300 dark:bg-red-300 dark:text-stone-600"
+              } ${!task.completed &&
               !task.alerted &&
               !task.inProgress &&
               "joyRideTask"
@@ -111,10 +109,6 @@ export const Task = ({ task }) => {
               <div className="flex justify-end">
                 {task.pomodoroCounter}/{task.pomodoro}
               </div>
-              <BsThreeDotsVertical
-                className="ml-2 cursor-pointer"
-                onClick={() => setOpenSettings(!openSettings)}
-              />
             </div>
           </div>
         </div>

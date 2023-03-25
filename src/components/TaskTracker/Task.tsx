@@ -1,3 +1,4 @@
+import { ITask } from "../../interfaces";
 import { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { RiArrowGoBackFill } from "react-icons/ri";
@@ -10,10 +11,23 @@ import { useTask, useTimer, useBreakStarted } from "@Store";
 
 export const Task = ({ task }) => {
   const [openSettings, setOpenSettings] = useState(false);
-  const { completeTask, toggleInProgressState, alertTask, setPomodoroCounter } =
+  const { completeTask, toggleInProgressState, alertTask, setPomodoroCounter, toggleMenu} =
     useTask();
   const { breakStarted } = useBreakStarted();
   const { timerQueue } = useTimer();
+
+  const openContextMenu = (event) => {
+    event.preventDefault();
+    toggleMenu(task.id, !task.menuToggled);
+  }
+
+
+  /* from enum import Enum, auto
+   * class State(Enum):
+   *    On = object() // this create a memory address 
+  */
+
+
 
   function preventFalseInProgress() {
     if (task.completed) {
@@ -37,62 +51,71 @@ export const Task = ({ task }) => {
   return (
     <>
       {!openSettings ? (
-        <div
-          className={`my-2 w-full cursor-pointer border-l-4 bg-stone-300 py-2 px-2 dark:bg-gray-700 ${
-            task.inProgress &&
-            !task.completed &&
-            "joyRideInProgressTask border-cyan-700 bg-cyan-500 dark:bg-cyan-500 dark:text-stone-600"
-          } ${
-            task.completed &&
-            "border-green-500 bg-green-300 line-through dark:bg-green-300 dark:text-stone-600"
-          } ${
-            !task.completed &&
-            task.alerted &&
-            "border-red-500 bg-red-300 dark:bg-red-300 dark:text-stone-600"
-          } ${
-            !task.completed &&
-            !task.alerted &&
-            !task.inProgress &&
-            "joyRideTask"
-          }`}
-          onDoubleClick={() => preventFalseInProgress()}
-        >
-          <div className="cancelDrag flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div>
-                {!task.completed ? (
-                  <FaCheck
-                    className={`ml-2 cursor-pointer dark:text-stone-600 ${
-                      task.completed ? "text-green-500" : "text-slate-500"
-                    }`}
-                    onClick={() => completeTask(task.id)}
-                  />
-                ) : (
-                  <RiArrowGoBackFill
-                    className={`ml-2 cursor-pointer ${
-                      task.completed ? "text-green-500" : "text-slate-500"
-                    }`}
-                    onClick={() => completeTask(task.id)}
-                  />
-                )}
+        
+          <div
+            className={`my-2 w-full cursor-pointer border-l-4 bg-stone-300 py-2 px-2 dark:bg-gray-700 ${task.inProgress &&
+              !task.completed &&
+              "joyRideInProgressTask border-cyan-700 bg-cyan-500 dark:bg-cyan-500 dark:text-stone-600"
+              } ${task.completed &&
+              "border-green-500 bg-green-300 line-through dark:bg-green-300 dark:text-stone-600"
+              } ${!task.completed &&
+              task.alerted &&
+              "border-red-500 bg-red-300 dark:bg-red-300 dark:text-stone-600"
+              } ${!task.completed &&
+              !task.alerted &&
+              !task.inProgress &&
+              "joyRideTask"
+              }`}
+            onDoubleClick={() => preventFalseInProgress()}
+            onContextMenu={openContextMenu}
+          >
+            <div className="cancelDrag flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div>
+                  {!task.completed ? (
+                    <FaCheck
+                      className={`ml-2 cursor-pointer dark:text-stone-600 ${task.completed ? "text-green-500" : "text-slate-500"
+                        }`}
+                      onClick={() => completeTask(task.id)}
+                    />
+                  ) : (
+                    <RiArrowGoBackFill
+                      className={`ml-2 cursor-pointer ${task.completed ? "text-green-500" : "text-slate-500"
+                        }`}
+                      onClick={() => completeTask(task.id)}
+                    />
+                  )}
+                </div>
+                <div className="whitespace-normal">{task.description}</div>
               </div>
-              <div className="whitespace-normal">{task.description}</div>
-            </div>
-            <div className="flex items-center">
-              {/*This the guy*/}
-              <div className="flex justify-end">
-                {task.pomodoroCounter}/{task.pomodoro}
+              
+              <div className="flex items-center">
+                {/*This the guy */}
+                <div className="flex justify-end">
+                  {task.pomodoroCounter}/{task.pomodoro}
+                </div>
+                <BsThreeDotsVertical
+                  className="ml-2 cursor-pointer"
+                  onClick={() => setOpenSettings(!openSettings)}
+                />
               </div>
-              <BsThreeDotsVertical
-                className="ml-2 cursor-pointer"
-                onClick={() => setOpenSettings(!openSettings)}
-              />
             </div>
           </div>
-        </div>
+
       ) : (
         <Settings setOpenSettings={setOpenSettings} Task={task} />
       )}
+      <div className="absolute">
+        {task.menuToggled && (
+          <div className="bg-slate-500">
+            <ul>
+              <li>Mark Completed</li>
+              <li>Delete</li>
+              <li>Do Something</li>
+            </ul>
+          </div>
+        )}
+      </div>
     </>
   );
 };

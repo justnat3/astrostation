@@ -43,9 +43,10 @@ export const DWrapper = ({
   }
 
   const triggerMouseEvent = (element, eventType) => {
-    const mouseEvent = document.createEvent("MouseEvents");
+    const mouseEvent = new MouseEvent(
+      eventType, { bubbles: true, cancelable: true }
+    );
 
-    mouseEvent.initEvent(eventType, true, true);
     element.dispatchEvent(mouseEvent);
   };
 
@@ -89,9 +90,8 @@ export const DWrapper = ({
           >
             <div
               ref={ref}
-              className={`inline-block ${
-                toggleHook ? "visible" : "pointer-events-none hidden"
-              }`}
+              className={`inline-block ${toggleHook ? "visible" : "pointer-events-none hidden"
+                }`}
             >
               {children}
             </div>
@@ -104,9 +104,8 @@ export const DWrapper = ({
           >
             <div
               ref={ref}
-              className={`inline-block ${
-                toggleHook ? "visible" : "pointer-events-none hidden"
-              }`}
+              className={`inline-block ${toggleHook ? "visible" : "pointer-events-none hidden"
+                }`}
             >
               {children}
             </div>

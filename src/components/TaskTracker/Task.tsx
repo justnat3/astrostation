@@ -1,11 +1,9 @@
-import { ITask } from "../../interfaces";
 import { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Settings } from "./Settings";
 import { useTask, useTimer, useBreakStarted } from "@Store";
-import clsx from "clsx";
 
 // TODO: Remove alerted
 // TODO: Add a blurb/instructions to let users know how to toggle
@@ -57,26 +55,32 @@ export const Task = ({ task }) => {
     }
   }, [task.pomodoroCounter]);
 
+  // close 
+  const closeContextMenuOOB = (e) => {
+    if (task.menuToggled) {
+      toggleMenu(task.id, !task.menuToggled);
+    }
+  }
+  document.addEventListener("mousedown", closeContextMenuOOB);
+
   return (
     <>
       {!openSettings ? (
 
         <div
-          className={clsx(
-            "my-2 w-full cursor-pointer border-l-4 bg-stone-300 py-2 px-2 dark:bg-gray-700",
-            task.inProgress &&
-              !task.completed &&
-              "joyRideInProgressTask border-cyan-700 bg-cyan-500 dark:bg-cyan-500 dark:text-stone-600"
-              } ${task.completed &&
-              "border-green-500 bg-green-300 line-through dark:bg-green-300 dark:text-stone-600"
-              } ${!task.completed &&
-              task.alerted &&
-              "border-red-500 bg-red-300 dark:bg-red-300 dark:text-stone-600"
-              } ${!task.completed &&
-              !task.alerted &&
-              !task.inProgress &&
-              "joyRideTask"
-          )}
+          className={`my-2 w-full cursor-pointer border-l-4 bg-stone-300 py-2 px-2 dark:bg-gray-700 ${task.inProgress &&
+            !task.completed &&
+            "joyRideInProgressTask border-cyan-700 bg-cyan-500 dark:bg-cyan-500 dark:text-stone-600"
+            } ${task.completed &&
+            "border-green-500 bg-green-300 line-through dark:bg-green-300 dark:text-stone-600"
+            } ${!task.completed &&
+            task.alerted &&
+            "border-red-500 bg-red-300 dark:bg-red-300 dark:text-stone-600"
+            } ${!task.completed &&
+            !task.alerted &&
+            !task.inProgress &&
+            "joyRideTask"
+            }`}
           onDoubleClick={() => preventFalseInProgress()}
           onContextMenu={openContextMenu}
         >
@@ -85,18 +89,14 @@ export const Task = ({ task }) => {
               <div>
                 {!task.completed ? (
                   <FaCheck
-                    className={clsx(
-                      "ml-2 cursor-pointer dark:text-stone-600",
-                      task.completed ? "text-green-500" : "text-slate-500"
-                    )}
+                    className={`ml-2 cursor-pointer dark:text-stone-600 ${task.completed ? "text-green-500" : "text-slate-500"
+                      }`}
                     onClick={() => completeTask(task.id)}
                   />
                 ) : (
                   <RiArrowGoBackFill
-                    className={clsx(
-                      "ml-2 cursor-pointer",
-                      task.completed ? "text-green-500" : "text-slate-500"
-                    )}
+                    className={`ml-2 cursor-pointer ${task.completed ? "text-green-500" : "text-slate-500"
+                      }`}
                     onClick={() => completeTask(task.id)}
                   />
                 )}
@@ -109,6 +109,10 @@ export const Task = ({ task }) => {
               <div className="flex justify-end">
                 {task.pomodoroCounter}/{task.pomodoro}
               </div>
+              <BsThreeDotsVertical
+                className="ml-2 cursor-pointer"
+                onClick={() => setOpenSettings(!openSettings)}
+              />
             </div>
           </div>
         </div>
@@ -122,25 +126,18 @@ export const Task = ({ task }) => {
           <div
             className="bg-neutral-800 rounded-md" onMouseLeave={closeOnBoundsExit}>
             <ul className="w-full">
-              <li
-                onClick={() => { toggleInProgressState(task.id) }}
-                className="px-5 py-2 hover:bg-neutral-600 rounded-md">
-                <div>
-                  Select Task
-                </div>
-              </li>
-              <li
+                <li
                 onClick={() => { completeTask(task.id) }}
                 className="px-5 py-2 hover:bg-neutral-600 rounded-md">
                 <div>
-                  Complete Task
+                  Toggle Completed
                 </div>
               </li>
               <li
                 onClick={() => { handleDelete() }}
                 className="px-5 py-2 hover:bg-neutral-600 rounded-md">
                 <div>
-                  Delete Task
+                  Deleted
                 </div>
               </li>
             </ul>

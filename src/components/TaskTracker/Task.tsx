@@ -5,11 +5,12 @@ import { RiArrowGoBackFill } from "react-icons/ri";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Settings } from "./Settings";
 import { useTask, useTimer, useBreakStarted } from "@Store";
+import { ITask } from "@Root/src/interfaces";
 
 // TODO: Remove alerted
 // TODO: Add a blurb/instructions to let users know how to toggle
 
-export const Task = ({ task }) => {
+export const Task = ({ task, tasks }) => {
   const [openSettings, setOpenSettings] = useState(false);
   const { removeTask, completeTask, toggleInProgressState, alertTask, setPomodoroCounter, toggleMenu } =
     useTask();
@@ -19,9 +20,16 @@ export const Task = ({ task }) => {
   const openContextMenu = (event) => {
     event.preventDefault();
     toggleMenu(task.id, !task.menuToggled);
+
+    /* This is a linear search, but it didn't seem to have much 
+       of an effect on perf with about 100-200 tasks*/
+    tasks.forEach((_task: ITask) => {
+      if (_task.menuToggled)
+        toggleMenu(_task.id, false);
+    });
   }
 
-  /* when the mouse leaves the bounds of the task 
+  /* when the mouse leaves the bounds of the ContextMenu
    * only when the task context-menu is open we can close the contextmenu
    * when the mouse leaves the bounds of the tasks div 
    */
@@ -123,7 +131,7 @@ export const Task = ({ task }) => {
                 onClick={() => { toggleInProgressState(task.id) }}
                 className="px-5 py-2 hover:bg-neutral-600 rounded-md select-none">
                 <div>
-                  Toggled Selected Task
+                  Track Task
                 </div>
               </li>
               <li
